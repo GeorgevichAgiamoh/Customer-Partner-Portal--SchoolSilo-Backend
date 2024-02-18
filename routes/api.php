@@ -59,12 +59,16 @@ Route::group([
     Route::get('getPartnerComs/{uid}', [ApiController::class, 'getPartnerComs']);
     Route::get('getPartnerComsBySchool/{uid}/{sid}', [ApiController::class, 'getPartnerComsBySchool']);
     Route::get('getAnnouncements', [ApiController::class, 'getAnnouncements']);
+    Route::get('getSchoolsByPartner/{uid}', [ApiController::class, 'getSchoolsByPartner']);
+    Route::get('searchSchools', [ApiController::class, 'searchSchools']);
 
     Route::get('fileExists/{folder}/{filename}', [ApiController::class, 'fileExists']);
     Route::get('getFiles/{uid}', [ApiController::class, 'getFiles']);
 
     //---- ADMIN ONLY
     Route::post('setAnnouncements', [ApiController::class,'setAnnouncements']);
+
+    Route::get('getSchools', [ApiController::class, 'getSchools']);
 
 
     //----

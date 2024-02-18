@@ -55,6 +55,7 @@ class ApiController extends Controller
     public function setFirstAdminUserInfo(){
         User::create([
             "email"=> "admin@schoolsilo.cloud",
+            "uid"=> "ADMIN",
             "password"=> bcrypt("123456"),
         ]);
         admin_user::create([
@@ -121,43 +122,45 @@ class ApiController extends Controller
             "verif"=> "required",
             "pay"=> "required",
         ]);
-        $usr = User::where("email","=", $request->email)->first();
-        if($usr){
-            $usr->update([
-                "password1"=>bcrypt($request->password),
-            ]);
-        }else{
+        $uid = $request->email.'s';
+        $usr = User::where("uid", $uid)->first();
+        if(!$usr){
             $usr = User::create([
                 "email"=> $request->email,
-                "password1"=> bcrypt($request->password),
+                "uid"=> $uid,
+                "password"=> bcrypt($request->password),
             ]);
-        }
-        school_basic_data::create([
-            "user_id"=> strval($usr->id),
-            "sname"=> $request->sname,
-            "phn"=> $request->phn,
-            "pcode"=> $request->pcode,
-            "eml"=> $request->email,
-            "verif"=> $request->verif,
-            "pay"=> $request->pay,
-        ]);
-        $token = JWTAuth::attempt([
-            "email"=> $request->email,
-            "password1"=> $request->password,
-        ]);
-        if(!empty($token)){
+            school_basic_data::create([
+                "user_id"=> strval($usr->id),
+                "sname"=> $request->sname,
+                "phn"=> $request->phn,
+                "pcode"=> $request->pcode,
+                "eml"=> $request->email,
+                "verif"=> $request->verif,
+                "pay"=> $request->pay,
+            ]);
+            $token = JWTAuth::attempt([
+                "email"=> $request->email,
+                "password"=> $request->password,
+            ]);
+            if(!empty($token)){
+                return response()->json([
+                    "status"=> true,
+                    "message"=> "User created successfully: ".strval($usr->id),
+                    "token"=> $token,
+                    "pld"=>$usr
+                ]);
+            }
+            // Respond
             return response()->json([
                 "status"=> true,
-                "message"=> "User created successfully: ".strval($usr->id),
-                "token"=> $token,
+                "message"=> "User created successfully",
                 "pld"=>$usr
             ]);
         }
-        // Respond
         return response()->json([
-            "status"=> true,
-            "message"=> "User created successfully",
-            "pld"=>$usr
+            "status"=> false,
+            "message"=> "Account already exists",
         ]);
     }
 
@@ -174,9 +177,8 @@ class ApiController extends Controller
      *             @OA\Property(property="email", type="string", format="email"),
      *             @OA\Property(property="password", type="string"),
      *             @OA\Property(property="fname", type="string"),
-     *             @OA\Property(property="mname", type="string", required=false),
+     *             @OA\Property(property="mname", type="string"),
      *             @OA\Property(property="lname", type="string"),
-     * 
      *             @OA\Property(property="phn", type="string"),
      *             @OA\Property(property="pcode", type="string"),
      *             @OA\Property(property="verif", type="string"),
@@ -196,43 +198,45 @@ class ApiController extends Controller
             "phn"=> "required",
             "verif"=> "required",
         ]);
-        $usr = User::where("email","=", $request->email)->first();
-        if($usr){
-            $usr->update([
-                "password2"=>bcrypt($request->password),
-            ]);
-        }else{
+        $uid = $request->email.'p';
+        $usr = User::where("uid", $uid)->first();
+        if(!$usr){
             $usr = User::create([
                 "email"=> $request->email,
-                "password2"=> bcrypt($request->password),
+                "uid"=> $uid,
+                "password"=> bcrypt($request->password),
             ]);
-        }
-        partner_basic_data::create([
-            "user_id"=> strval($usr->id),
-            "fname"=> $request->fname,
-            "lname"=> $request->lname,
-            "mname"=> $request->mname,
-            "phn"=> $request->phn,
-            "eml"=> $request->email,
-            "verif"=> $request->verif,
-        ]);
-        $token = JWTAuth::attempt([
-            "email"=> $request->email,
-            "password1"=> $request->password,
-        ]);
-        if(!empty($token)){
+            partner_basic_data::create([
+                "user_id"=> strval($usr->id),
+                "fname"=> $request->fname,
+                "lname"=> $request->lname,
+                "mname"=> $request->mname,
+                "phn"=> $request->phn,
+                "eml"=> $request->email,
+                "verif"=> $request->verif,
+            ]);
+            $token = JWTAuth::attempt([
+                "email"=> $request->email,
+                "password"=> $request->password,
+            ]);
+            if(!empty($token)){
+                return response()->json([
+                    "status"=> true,
+                    "message"=> "User created successfully: ".strval($usr->id),
+                    "token"=> $token,
+                    "pld"=>$usr
+                ]);
+            }
+            // Respond
             return response()->json([
                 "status"=> true,
-                "message"=> "User created successfully: ".strval($usr->id),
-                "token"=> $token,
+                "message"=> "User created successfully",
                 "pld"=>$usr
             ]);
         }
-        // Respond
         return response()->json([
-            "status"=> true,
-            "message"=> "User created successfully",
-            "pld"=>$usr
+            "status"=> false,
+            "message"=> "Account already exists",
         ]);
     }
 
@@ -315,14 +319,14 @@ class ApiController extends Controller
             "pwd"=>"required",
             "type"=>"required",
         ]);
-        $pwdId = $request->type == '0'?'password1':'password2';
         $pld = password_reset_tokens::where("token","=", $request->token)->first();
         if($pld){
             $email = $pld->email;
-            $usr = User::where("email","=", $email)->first();
+            $uid = $email.($request->type == '0'?'s':'p');
+            $usr = User::where("uid", $uid)->first();
             if($usr){
                 $usr->update([
-                    $pwdId=>bcrypt($request->pwd),
+                    "password"=>bcrypt($request->pwd),
                 ]);
                 return response()->json([
                     "status"=> true,
@@ -414,13 +418,16 @@ class ApiController extends Controller
         ]);
         $token = JWTAuth::attempt([
             "email"=> $request->email,
-            "password1"=> $request->password,
+            "password"=> $request->password,
         ]);
-        if(!empty($token)){
+        $uid = $request->email.'s';
+        $usr = User::where("uid", $uid)->first();
+        if(!empty($token) && $usr){
             return response()->json([
                 "status"=> true,
                 "message"=> "User login successfully",
                 "token"=> $token,
+                "pld"=>$usr
             ]);
         }
         // Respond
@@ -454,13 +461,16 @@ class ApiController extends Controller
         ]);
         $token = JWTAuth::attempt([
             "email"=> $request->email,
-            "password2"=> $request->password,
+            "password"=> $request->password,
         ]);
-        if(!empty($token)){
+        $uid = $request->email.'p';
+        $usr = User::where("uid", $uid)->first();
+        if(!empty($token) && $usr){
             return response()->json([
                 "status"=> true,
                 "message"=> "User login successfully",
                 "token"=> $token,
+                "pld"=>$usr
             ]);
         }
         // Respond
@@ -1275,6 +1285,115 @@ class ApiController extends Controller
         ]);
     }
 
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/getSchoolsByPartner/{uid}",
+     *     tags={"Api"},
+     *     summary="Get Partner's Schools",
+     *     description="Use this endpoint to get a Partner's Schools.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="uid",
+     *         in="path",
+     *         required=true,
+     *         description="User ID of the partner",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="start",
+     *         in="query",
+     *         required=false,
+     *         description="Index to start at",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="count",
+     *         in="query",
+     *         required=false,
+     *         description="No of records to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     * )
+     */
+    public function getSchoolsByPartner($uid){
+        $start = 0;
+        $count = 20;
+        if(request()->has('start') && request()->has('count')) {
+            $start = request()->input('start');
+            $count = request()->input('count');
+        }
+        $members = school_basic_data::where('pcode',$uid)->skip($start)->take($count)->get();
+        $pld = [];
+        foreach ($members as $member) {
+            $user_id = $member->user_id;
+            $genData = school_general_data::where('user_id', $user_id)->first();
+            $pld[] = [
+                'b'=> $member,
+                'g'=> $genData,
+            ];
+        }
+        return response()->json([
+            "status"=> true,
+            "message"=> "Success",
+            "pld"=> $pld,
+        ]);
+    }
+
+     /**
+     * @OA\Get(
+     *     path="/api/searchSchools",
+     *     tags={"Api"},
+     *     summary="Full text search on school names",
+     *     description=" Use this endpoint for Full text search on school names",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         required=true,
+     *         description="Search term",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     * )
+     */
+    public function searchSchools(){
+        $search = null;
+        if(request()->has('search')) {
+            $search = request()->input('search');
+        }
+        if($search) {
+            $members = school_basic_data::whereRaw("MATCH(sname) AGAINST(? IN BOOLEAN MODE)", [$search])
+            ->orderByRaw("MATCH(sname) AGAINST(? IN BOOLEAN MODE) DESC", [$search])
+            ->take(2)
+            ->get();
+            $pld = [];
+            foreach ($members as $member) {
+                $user_id = $member->user_id;
+                $genData = school_general_data::where('user_id', $user_id)->first();
+                $pld[] = [
+                    'b'=> $member,
+                    'g'=> $genData,
+                ];
+            }
+            return response()->json([
+                "status"=> true,
+                "message"=> "Success",
+                "pld"=> $pld
+            ]); 
+        }
+        return response()->json([
+            "status"=> false,
+            "message"=> "The Search param is required"
+        ]);
+    }
+
+
+
     /**
      * @OA\Get(
      *     path="/api/getPartnerHighlights/{uid}",
@@ -1295,12 +1414,14 @@ class ApiController extends Controller
      */
     public function getPartnerHighlights($uid){
         $totalSchools = school_basic_data::where('pcode',$uid)->count();
-        $totalComs = partner_coms::where('partner_id',$uid)->sum('amt');
+        $totalComsAmt = partner_coms::where('partner_id',$uid)->sum('amt');
+        $totalComs = partner_coms::where('partner_id',$uid)->count();
         return response()->json([
             "status"=> true,
             "message"=> "Success",
             "pld"=> [
                 'totalSchools'=>$totalSchools,
+                'totalComsAmt'=>$totalComsAmt,
                 'totalComs'=>$totalComs
             ],
         ]);   
@@ -1339,8 +1460,16 @@ class ApiController extends Controller
             $start = request()->input('start');
             $count = request()->input('count');
         }
-        $pld = announcements::take($count)->skip($start)->get();
-        // Respond
+        $members = announcements::take($count)->skip($start)->get();
+        $pld = [];
+        foreach ($members as $member) {
+            $user_id = $member->user_id;
+            $genData = school_general_data::where('user_id', $user_id)->first();
+            $pld[] = [
+                'b'=> $member,
+                'g'=> $genData,
+            ];
+        }
         return response()->json([
             "status"=> true,
             "message"=> "Success",
@@ -1392,6 +1521,53 @@ class ApiController extends Controller
             return response()->json([
                 "status"=> true,
                 "message"=> "Announcement Added"
+            ]);
+        }
+        return response()->json([
+            "status"=> false,
+            "message"=> "Access denied"
+        ],401);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/getSchools",
+     *     tags={"Admin"},
+     *     summary="ADMIN: Get schools",
+     *     description="Use this endpoint to get Schools.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="start",
+     *         in="query",
+     *         required=false,
+     *         description="Index to start at",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="count",
+     *         in="query",
+     *         required=false,
+     *         description="No of records to retrieve",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     * )
+     */
+    public function getSchools(){
+        if ( $this->hasRole('0')) {
+            $start = 0;
+            $count = 20;
+            if(request()->has('start') && request()->has('count')) {
+                $start = request()->input('start');
+                $count = request()->input('count');
+            }
+            $pld = school_basic_data::take($count)->skip($start)->get();
+            // Respond
+            return response()->json([
+                "status"=> true,
+                "message"=> "Success",
+                "pld"=> $pld,
             ]);
         }
         return response()->json([

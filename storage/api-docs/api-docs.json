@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "NACDDED API | Stable Shield Solutions",
-        "description": "Backend for the NACDDED project. Powered by Stable Shield Solutions",
+        "title": "SCHOOLSILO API | Stable Shield Solutions",
+        "description": "Backend for the SCHOOLSILO project. Powered by Stable Shield Solutions",
         "contact": {
             "name": "API Support",
             "email": "support@stableshield.com"
@@ -14,13 +14,13 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/registerAdmin": {
+        "/api/setFirstAdminUserInfo": {
             "post": {
                 "tags": [
                     "Unprotected"
                 ],
                 "summary": "Create the admin, DO NOT CALL, YOU DONT NEED THIS ENDPOINT !!!!",
-                "operationId": "8af28a37c3fc8371c45862ce14f9a92e",
+                "operationId": "755da55942eba539d695da81491d03b0",
                 "responses": {
                     "200": {
                         "description": "Login Successfully"
@@ -28,13 +28,13 @@
                 }
             }
         },
-        "/api/register": {
+        "/api/registerSchool": {
             "post": {
                 "tags": [
                     "Unprotected"
                 ],
-                "summary": "YOU DONT NEED THIS ENDPOINT !!!!",
-                "operationId": "82447091133210fc21daa20fe7bee91b",
+                "summary": "Register a school",
+                "operationId": "8e36e29325a9cc83f8a8b1aa1a40a8f2",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -48,10 +48,55 @@
                                     "password": {
                                         "type": "string"
                                     },
-                                    "name": {
+                                    "sname": {
+                                        "type": "string"
+                                    },
+                                    "phn": {
+                                        "type": "string"
+                                    },
+                                    "pcode": {
+                                        "type": "string"
+                                    },
+                                    "verif": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Successfully"
+                    }
+                }
+            }
+        },
+        "/api/registerPartner": {
+            "post": {
+                "tags": [
+                    "Unprotected"
+                ],
+                "summary": "Register a partner",
+                "operationId": "6b794a381dc0abd7ccb07e94faa3aeea",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
                                         "type": "string"
                                     },
                                     "fname": {
+                                        "type": "string"
+                                    },
+                                    "mname": {
                                         "type": "string"
                                     },
                                     "lname": {
@@ -60,7 +105,10 @@
                                     "phn": {
                                         "type": "string"
                                     },
-                                    "addr": {
+                                    "pcode": {
+                                        "type": "string"
+                                    },
+                                    "verif": {
                                         "type": "string"
                                     }
                                 },
@@ -92,6 +140,9 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email"
+                                    },
+                                    "type": {
+                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -123,6 +174,9 @@
                                         "type": "string"
                                     },
                                     "pwd": {
+                                        "type": "string"
+                                    },
+                                    "type": {
                                         "type": "string"
                                     }
                                 },
@@ -171,13 +225,13 @@
                 }
             }
         },
-        "/api/login": {
+        "/api/schoolLogin": {
             "post": {
                 "tags": [
                     "Unprotected"
                 ],
-                "summary": "Login to the application",
-                "operationId": "f6d04be1de7bb4a85327471c8d3d1e42",
+                "summary": "School Login to the application",
+                "operationId": "8c803ebac9c711607ebb360c74b56aec",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -204,32 +258,37 @@
                 }
             }
         },
-        "/api/getAnnouncements": {
-            "get": {
+        "/api/partnerLogin": {
+            "post": {
                 "tags": [
-                    "Api"
+                    "Unprotected"
                 ],
-                "summary": "Get Announcements",
-                "description": "Use this endpoint to get information about announcements.",
-                "operationId": "0aa905d40e259e686e18abd0e3e39da5",
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
+                "summary": "Partner Login to the application",
+                "operationId": "9abd07b611fea28d3c877e185e1850f6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
                     }
                 },
-                "security": [
-                    {
-                        "bearerAuth": []
+                "responses": {
+                    "200": {
+                        "description": "Login Successfully"
                     }
-                ]
+                }
             }
         },
         "/api/uploadFile": {
@@ -413,274 +472,40 @@
                 ]
             }
         },
-        "/api/getEvents": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Get Events",
-                "description": "Use this endpoint to get information about events.",
-                "operationId": "163de92db4cd6edc18f6953d5a01c566",
-                "parameters": [
-                    {
-                        "name": "count",
-                        "in": "query",
-                        "description": "Number of records to retrieve. If not specified, all will be returned",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "from",
-                        "in": "query",
-                        "description": "Get events after mills ",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "to",
-                        "in": "query",
-                        "description": "Get events before mills ",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getEvent/{eventId}": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Get an Event",
-                "description": "Use this endpoint to get information about an event.",
-                "operationId": "6b34e06a5f5d6c960f81c97c7e9ddc08",
-                "parameters": [
-                    {
-                        "name": "eventId",
-                        "in": "path",
-                        "description": "Event ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getFreeEvent/{dioceseId}/{eventId}": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Register for a free event",
-                "description": "Use this endpoint to reg for a free event.",
-                "operationId": "f495aa700d968f4042dc2ede851ba570",
-                "parameters": [
-                    {
-                        "name": "dioceseId",
-                        "in": "path",
-                        "description": "Diocese Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "eventId",
-                        "in": "path",
-                        "description": "Event ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/manualRegEvent/{dioceseId}/{eventId}": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Manual reg for event (file proof)",
-                "description": "Use this endpoint to manually reg for a an event.",
-                "operationId": "3f0ba25cf423a7caa6f269c0e00b8866",
-                "parameters": [
-                    {
-                        "name": "dioceseId",
-                        "in": "path",
-                        "description": "Diocese Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "eventId",
-                        "in": "path",
-                        "description": "Event ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/hasDioceseRegisteredEvent/{dioceseId}/{eventId}": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Check if diocese has registred for an event",
-                "description": "Use this endpoint to check if diocese has registred for an event.",
-                "operationId": "ad8443750a25652201c960997b4911cc",
-                "parameters": [
-                    {
-                        "name": "dioceseId",
-                        "in": "path",
-                        "description": "Diocese Id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "eventId",
-                        "in": "path",
-                        "description": "Event ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/setDioceseBasicInfo": {
+        "/api/setSchoolBasicInfo": {
             "post": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Set Diocese Basic Info",
-                "description": "This sensitive endpoint is used to set basic information about a diocese. You must re-login immediately after calling it.",
-                "operationId": "398e9756a107d36ee30471186d10a7e4",
+                "summary": "Set School Basic Info",
+                "description": "This sensitive endpoint is used to set basic information about a school.",
+                "operationId": "250cffdceb21c9e4afcd56602db5c2a4",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "diocese_id": {
-                                        "description": "get Diocese ID from getSecretaryInfo endpoint",
+                                    "user_id": {
                                         "type": "string"
                                     },
-                                    "name": {
-                                        "description": "Name of the diocese",
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "sname": {
                                         "type": "string"
                                     },
                                     "phn": {
-                                        "description": "Phone number of the diocese",
+                                        "type": "string"
+                                    },
+                                    "pcode": {
                                         "type": "string"
                                     },
                                     "verif": {
-                                        "description": "Verification status (0 or 1)",
+                                        "type": "string"
+                                    },
+                                    "pay": {
                                         "type": "string"
                                     }
                                 },
@@ -691,7 +516,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Diocese Basic info set/updated successfully"
+                        "description": "Success"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -704,19 +529,19 @@
                 ]
             }
         },
-        "/api/getDioceseBasicInfo/{dioceseId}": {
+        "/api/getSchoolBasicInfo/{uid}": {
             "get": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Get Diocese Basic Info",
-                "description": "Use this endpoint to get basic information about a diocese.",
-                "operationId": "0fab7a41a960048d54ac4d1167e1ccd4",
+                "summary": "Get School Basic Info",
+                "description": "Use this endpoint to get basic information about a school.",
+                "operationId": "8ff6b781cd81e0c1dd220bd13d606818",
                 "parameters": [
                     {
-                        "name": "dioceseId",
+                        "name": "uid",
                         "in": "path",
-                        "description": "Diocese Id",
+                        "description": "User Id of the School",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -743,140 +568,40 @@
                 ]
             }
         },
-        "/api/setDioceseGeneralInfo": {
+        "/api/setPartnerBasicInfo": {
             "post": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Set Diocese General Info",
-                "description": "Use this endpoint to set general information about a diocese.",
-                "operationId": "53339366ffa664818c3362ec28ace710",
+                "summary": "Set Partner Basic Info",
+                "description": "This endpoint is used to set basic information about a partner.",
+                "operationId": "18a1fa5cd4359a92fd37729d50d55664",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "diocese_id": {
-                                        "description": "Get it from getMyDiocese endpoint",
+                                    "user_id": {
                                         "type": "string"
                                     },
-                                    "state": {
-                                        "description": "State of the diocese",
-                                        "type": "string"
-                                    },
-                                    "lga": {
-                                        "description": "Local Government Area of the diocese",
-                                        "type": "string"
-                                    },
-                                    "addr": {
-                                        "description": "Address of the diocese",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Diocese general info set successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getDioceseGeneralInfo/{dioceseId}": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Get Diocese General Info",
-                "description": "Use this endpoint to get general information about a diocese.",
-                "operationId": "04725df990332744b10b9c66a65d768b",
-                "parameters": [
-                    {
-                        "name": "dioceseId",
-                        "in": "path",
-                        "description": "Diocese Id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/setSecretaryInfo": {
-            "post": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Set Secretary Info",
-                "description": "Use this endpoint to craete/update a secretary.",
-                "operationId": "1dd6d2c05d4705428f3b106f18d258ac",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
                                     "email": {
-                                        "description": "Email of the secretary",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "email"
                                     },
                                     "fname": {
-                                        "description": "First name of the secretary",
-                                        "type": "string"
-                                    },
-                                    "lname": {
-                                        "description": "Last name of the secretary",
                                         "type": "string"
                                     },
                                     "mname": {
-                                        "description": "Middle name of the secretary",
                                         "type": "string"
                                     },
-                                    "sex": {
-                                        "description": "Sex of the secretary",
+                                    "lname": {
                                         "type": "string"
                                     },
                                     "phn": {
-                                        "description": "Phone number of the secretary",
                                         "type": "string"
                                     },
-                                    "addr": {
-                                        "description": "Address of the secretary",
-                                        "type": "string"
-                                    },
-                                    "diocese_id": {
-                                        "description": "Diocese ID",
+                                    "verif": {
                                         "type": "string"
                                     }
                                 },
@@ -887,7 +612,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Secretary info set successfully"
+                        "description": "Success"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -900,19 +625,19 @@
                 ]
             }
         },
-        "/api/getSecretaryInfo": {
+        "/api/getPartnerBasicInfo/{uid}": {
             "get": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Get Secretary Info",
-                "description": "Use this endpoint to get information about a secretary. Itll include a diocese id ",
-                "operationId": "978cf9603aa2bf40db098cb629435e36",
+                "summary": "Get Partner Basic Info",
+                "description": "Use this endpoint to get basic information about a partner.",
+                "operationId": "2cdd038725ea24d0e8fbea7532f36ebc",
                 "parameters": [
                     {
-                        "name": "email",
-                        "in": "query",
-                        "description": "Email of the secretary",
+                        "name": "uid",
+                        "in": "path",
+                        "description": "User Id of the Partner",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -939,19 +664,82 @@
                 ]
             }
         },
-        "/api/getDioceseSecretaries/{dioceseId}": {
+        "/api/setSchoolGeneralInfo": {
+            "post": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Set School General Info",
+                "description": "Use this endpoint to set general information about a school.",
+                "operationId": "88bc0aeb4c4a57f6775493d6df549625",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "The user ID",
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "description": "State",
+                                        "type": "string"
+                                    },
+                                    "lga": {
+                                        "description": "Local Government Area",
+                                        "type": "string"
+                                    },
+                                    "addr": {
+                                        "description": "Address",
+                                        "type": "string"
+                                    },
+                                    "vision": {
+                                        "description": "Vision",
+                                        "type": "string"
+                                    },
+                                    "mission": {
+                                        "description": "Mission",
+                                        "type": "string"
+                                    },
+                                    "values": {
+                                        "description": "Values",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getSchoolGeneralInfo/{uid}": {
             "get": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Get All Secretaries for this diocese",
-                "description": "Use this endpoint to get all secretaries in this diocese",
-                "operationId": "fa89fd8b9d7c141c89ca4105877a86f5",
+                "summary": "Get School General Info",
+                "description": "Use this endpoint to get general information about a school.",
+                "operationId": "f5a6afbcf358df01470b290a0639ee91",
                 "parameters": [
                     {
-                        "name": "dioceseId",
+                        "name": "uid",
                         "in": "path",
-                        "description": "Diocese ID get from getSecretaryInfo endpoint",
+                        "description": "User Id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -978,28 +766,310 @@
                 ]
             }
         },
-        "/api/getDiocesePayments": {
+        "/api/setSchoolPropInfo": {
+            "post": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Set School Proprietor Info",
+                "description": "Use this endpoint to set proprietor information about a school.",
+                "operationId": "8e5f8a74e00558fcae0459e0770f7de9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "The user ID",
+                                        "type": "string"
+                                    },
+                                    "fname": {
+                                        "description": "First Name",
+                                        "type": "string"
+                                    },
+                                    "mname": {
+                                        "description": "Middle Name",
+                                        "type": "string"
+                                    },
+                                    "lname": {
+                                        "description": "Last Name",
+                                        "type": "string"
+                                    },
+                                    "sex": {
+                                        "description": "Gender",
+                                        "type": "string"
+                                    },
+                                    "phn": {
+                                        "description": "Phone",
+                                        "type": "string"
+                                    },
+                                    "addr": {
+                                        "description": "Address",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Email",
+                                        "type": "string",
+                                        "format": "email"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getSchoolPropInfo/{uid}": {
             "get": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Get Diocese Payments",
-                "description": "Use this endpoint to get all payments by a diocese.",
-                "operationId": "0b229dfebaea3399dae9951200016fb8",
+                "summary": "Get School Proprietor Info",
+                "description": "Use this endpoint to get general information about a proprietor.",
+                "operationId": "8f27d27b32198b607e6c502fb3a72635",
                 "parameters": [
                     {
-                        "name": "dioceseId",
+                        "name": "uid",
                         "in": "path",
-                        "description": "ID of the diocese",
+                        "description": "User Id",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
                     {
-                        "name": "payId",
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setPartnerGeneralInfo": {
+            "post": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Set Partner General Info",
+                "description": "Use this endpoint to set general information about a partner.",
+                "operationId": "f85694265e96d43bde806b6bb8aab452",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "The user ID",
+                                        "type": "string"
+                                    },
+                                    "state": {
+                                        "description": "State",
+                                        "type": "string"
+                                    },
+                                    "lga": {
+                                        "description": "Local Government Area",
+                                        "type": "string"
+                                    },
+                                    "addr": {
+                                        "description": "Address",
+                                        "type": "string"
+                                    },
+                                    "sex": {
+                                        "description": "Vision",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getPartnerGeneralInfo/{uid}": {
+            "get": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Get Partner General Info",
+                "description": "Use this endpoint to get general information about a partner.",
+                "operationId": "13134f78735ed0e60761e781244ddcd2",
+                "parameters": [
+                    {
+                        "name": "uid",
                         "in": "path",
-                        "description": "ID of the payment record to be retrieved",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setPartnerFinancialInfo": {
+            "post": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Set Partner Financial Info",
+                "description": "Use this endpoint to set financial information about a partner.",
+                "operationId": "c340c974a8e9499ef3108ae227bdc2de",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "user_id": {
+                                        "description": "The user ID",
+                                        "type": "string"
+                                    },
+                                    "bnk": {
+                                        "description": "Bank Code",
+                                        "type": "string"
+                                    },
+                                    "anum": {
+                                        "description": "Account Number",
+                                        "type": "string"
+                                    },
+                                    "aname": {
+                                        "description": "Acct Name",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getPartnerFinancialInfo/{uid}": {
+            "get": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Get Partner Fiancial Info",
+                "description": "Use this endpoint to get financial information about a partner.",
+                "operationId": "2da65999930a6ebcb91982e0fa3446d5",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "User Id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getPartnerComs/{uid}": {
+            "get": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Get Partner Commissions",
+                "description": "Use this endpoint to get information about a Partner Commissions.",
+                "operationId": "793a29164d76d7342be55bb0291ff5d5",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "User ID of the partner",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1008,7 +1078,7 @@
                     {
                         "name": "start",
                         "in": "query",
-                        "description": "Start index for limiting the result",
+                        "description": "Index to start at",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1017,7 +1087,7 @@
                     {
                         "name": "count",
                         "in": "query",
-                        "description": "Number of records to retrieve",
+                        "description": "No of records to retrieve",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1044,19 +1114,28 @@
                 ]
             }
         },
-        "/api/getEventRegs/{eventID}": {
+        "/api/getPartnerComsBySchool/{uid}/{sid}": {
             "get": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Get list of registration for an event",
-                "description": "Use this endpoint to get list of registration for an event.",
-                "operationId": "27fb5115049d22fa488387eb1bc5d5ae",
+                "summary": "Get Partner Commissions by School",
+                "description": "Use this endpoint to get information about a Partner Commissions by School.",
+                "operationId": "8358c634b631fbc6904801e6dfddd638",
                 "parameters": [
                     {
-                        "name": "eventID",
+                        "name": "uid",
                         "in": "path",
-                        "description": "ID of the event (ie the time column)",
+                        "description": "User ID of the partner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "description": "User ID of the school",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1065,7 +1144,7 @@
                     {
                         "name": "start",
                         "in": "query",
-                        "description": "Start index for limiting the result",
+                        "description": "Index to start at",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1074,7 +1153,7 @@
                     {
                         "name": "count",
                         "in": "query",
-                        "description": "Number of records to retrieve",
+                        "description": "No of records to retrieve",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1101,19 +1180,19 @@
                 ]
             }
         },
-        "/api/getDioceseEvents": {
+        "/api/getSchoolsByPartner/{uid}": {
             "get": {
                 "tags": [
                     "Api"
                 ],
-                "summary": "Get Diocese Registered Events",
-                "description": "Use this endpoint to get all payments by a diocese.",
-                "operationId": "630d93843872c0bf745476daff7f5a1b",
+                "summary": "Get Partner's Schools",
+                "description": "Use this endpoint to get a Partner's Schools.",
+                "operationId": "4b7a4f061983c586760a51085dc70964",
                 "parameters": [
                     {
-                        "name": "dioceseId",
+                        "name": "uid",
                         "in": "path",
-                        "description": "ID of the diocese",
+                        "description": "User ID of the partner",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1122,7 +1201,7 @@
                     {
                         "name": "start",
                         "in": "query",
-                        "description": "Start index for limiting the result",
+                        "description": "Index to start at",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1131,7 +1210,7 @@
                     {
                         "name": "count",
                         "in": "query",
-                        "description": "Number of records to retrieve",
+                        "description": "No of records to retrieve",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1158,14 +1237,112 @@
                 ]
             }
         },
-        "/api/getHighlights": {
+        "/api/searchSchools": {
             "get": {
                 "tags": [
-                    "Admin"
+                    "Api"
                 ],
-                "summary": "Get Highlights",
-                "description": "ADMIN: Use this endpoint to get information about highlights.",
-                "operationId": "b78f41b55a2fe78abffb9dac36a1aaef",
+                "summary": "Full text search on school names",
+                "description": " Use this endpoint for Full text search on school names",
+                "operationId": "bdc30e61633b770e5db02e64cf31f838",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getPartnerHighlights/{uid}": {
+            "get": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Get Highlights (Partner)",
+                "description": " Use this endpoint to get partner highlights.",
+                "operationId": "d3a0e806090d1e45f6293dac3474b0f7",
+                "parameters": [
+                    {
+                        "name": "uid",
+                        "in": "path",
+                        "description": "User ID of the partner",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getAnnouncements": {
+            "get": {
+                "tags": [
+                    "Api"
+                ],
+                "summary": "Get Announcements",
+                "description": "Use this endpoint to get information about announcements.",
+                "operationId": "0aa905d40e259e686e18abd0e3e39da5",
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "description": "Index to start at",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "description": "No of records to retrieve",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -1233,685 +1410,19 @@
                 ]
             }
         },
-        "/api/getAdmins": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Get all admins",
-                "description": "ADMIN: Use this endpoint to get information about all admins.",
-                "operationId": "6e999ef13925f1ce4637dc87907f170f",
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getAdmin": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Get Admin",
-                "description": "ADMIN: Use this endpoint to get information about a specific admin by providing the email as a query parameter.",
-                "operationId": "1fc184eab6b7ee099e1d1fcfa2de9ff7",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "Email of the admin to be retrieved",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/setAdmin": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Create a new admin",
-                "description": "ADMIN: This endpoint is used to create a new admin. Permissions for various actions are specified using pd1, pd2, pw1, pw2, pp1, pp2, pm1, and pm2 properties.",
-                "operationId": "59a97f5f16991515fafa4d6aeff81df5",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "lname": {
-                                        "type": "string"
-                                    },
-                                    "oname": {
-                                        "type": "string"
-                                    },
-                                    "role": {
-                                        "type": "string"
-                                    },
-                                    "pd1": {
-                                        "type": "string"
-                                    },
-                                    "pd2": {
-                                        "type": "string"
-                                    },
-                                    "pw1": {
-                                        "type": "string"
-                                    },
-                                    "pw2": {
-                                        "type": "string"
-                                    },
-                                    "pp1": {
-                                        "type": "string"
-                                    },
-                                    "pp2": {
-                                        "type": "string"
-                                    },
-                                    "pm1": {
-                                        "type": "string"
-                                    },
-                                    "pm2": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Admin created successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/removeAdmin": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Remove an admin",
-                "description": "ADMIN: Use this endpoint to remove an admin by providing the email as a query parameter.",
-                "operationId": "dd921019c21f5eb6feeb6ef1e6b3513a",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "Email of the admin to be removed",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Admin removed successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/sendMail": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Send Email",
-                "description": "ADMIN: Use this endpoint to send an email.",
-                "operationId": "546acffb65b267786bfa4d2f3de373ad",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "to": {
-                                        "description": "Recipient email address",
-                                        "type": "string"
-                                    },
-                                    "subject": {
-                                        "description": "Email subject",
-                                        "type": "string"
-                                    },
-                                    "message": {
-                                        "description": "Email body/message",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Email sent successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/setEvent": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Create Event",
-                "description": "ADMIN: Use this endpoint to create an event.",
-                "operationId": "7df3abcbb8a98672e146ebf3c8e77cd2",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "title": {
-                                        "description": "Title of the event",
-                                        "type": "string"
-                                    },
-                                    "time": {
-                                        "description": "Time of the event",
-                                        "type": "integer"
-                                    },
-                                    "venue": {
-                                        "description": "Venue of the event",
-                                        "type": "string"
-                                    },
-                                    "fee": {
-                                        "description": "Fee for the event",
-                                        "type": "string"
-                                    },
-                                    "start": {
-                                        "description": "Start time of the event",
-                                        "type": "integer"
-                                    },
-                                    "end": {
-                                        "description": "End time of the event",
-                                        "type": "integer"
-                                    },
-                                    "theme": {
-                                        "description": "Theme of the event",
-                                        "type": "string"
-                                    },
-                                    "speakers": {
-                                        "description": "Speakers in the event. I recommend comma separated",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Event created successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/uploadPayment": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Upload Payment Record",
-                "description": "ADMIN: Use this endpoint to manually upload payment records.",
-                "operationId": "243c8b22a589110512a6d111348f27cf",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "ref": {
-                                        "description": "Reference of the payment",
-                                        "type": "string"
-                                    },
-                                    "name": {
-                                        "description": "Name associated with the payment",
-                                        "type": "string"
-                                    },
-                                    "time": {
-                                        "description": "Time of the payment",
-                                        "type": "string"
-                                    },
-                                    "year": {
-                                        "description": "Year for annual dues (optional)",
-                                        "type": "string"
-                                    },
-                                    "event": {
-                                        "description": "Event ID for event-related payments (optional)",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Payment record uploaded successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getPayments/{payId}": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Get Payment Records",
-                "description": "ADMIN: Use this endpoint to get payment records by providing the payId as a path parameter. You can limit the result using start and count query parameters.",
-                "operationId": "78290d5f81c6dc0b4e0a0c838a0b159e",
-                "parameters": [
-                    {
-                        "name": "payId",
-                        "in": "path",
-                        "description": "ID of the payment record to be retrieved",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "start",
-                        "in": "query",
-                        "description": "Start index for limiting the result",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "count",
-                        "in": "query",
-                        "description": "Number of records to retrieve",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/setNacddedInfo": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Set Nacdded Info",
-                "description": "ADMIN: Use this endpoint to set information about Nacdded.",
-                "operationId": "d31132646952049c9772ee4dbd9a08b1",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "description": "Email of Nacdded",
-                                        "type": "string"
-                                    },
-                                    "cname": {
-                                        "description": "Name of the organization",
-                                        "type": "string"
-                                    },
-                                    "regno": {
-                                        "description": "Registration number of the organization",
-                                        "type": "string"
-                                    },
-                                    "addr": {
-                                        "description": "Address of the organization",
-                                        "type": "string"
-                                    },
-                                    "nationality": {
-                                        "description": "Nationality of the organization",
-                                        "type": "string"
-                                    },
-                                    "state": {
-                                        "description": "State of the organization",
-                                        "type": "string"
-                                    },
-                                    "lga": {
-                                        "description": "Local Government Area of the organization",
-                                        "type": "string"
-                                    },
-                                    "aname": {
-                                        "description": "Name of the authorized person",
-                                        "type": "string"
-                                    },
-                                    "anum": {
-                                        "description": "Contact number of the authorized person",
-                                        "type": "string"
-                                    },
-                                    "bnk": {
-                                        "description": "Bank name",
-                                        "type": "string"
-                                    },
-                                    "pname": {
-                                        "description": "Name of the person making the payment",
-                                        "type": "string"
-                                    },
-                                    "peml": {
-                                        "description": "Email of the person making the payment",
-                                        "type": "string"
-                                    },
-                                    "pphn": {
-                                        "description": "Phone number of the person making the payment",
-                                        "type": "string"
-                                    },
-                                    "paddr": {
-                                        "description": "Address of the person making the payment",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Nacdded info set successfully"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getNacddedInfo": {
-            "get": {
-                "tags": [
-                    "Admin"
-                ],
-                "summary": "Get Nacdded Info",
-                "description": "ADMIN: Use this endpoint to get information about Nacdded.",
-                "operationId": "c9666168b8c164fe36a2a97c7de4a3c8",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "description": "Email of Nacdded",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/setMySchool": {
-            "post": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Create/Update School",
-                "description": "Use this endpoint to create/update a school.",
-                "operationId": "ea8ed867dd569a6adc61cc99d76c9d07",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "diocese_id": {
-                                        "description": "The Diocess ID for this school. Get diocese id from getSecretaryInfo endpoint",
-                                        "type": "string"
-                                    },
-                                    "name": {
-                                        "description": "Name of school",
-                                        "type": "string"
-                                    },
-                                    "type": {
-                                        "description": "Type of school",
-                                        "type": "string"
-                                    },
-                                    "lea": {
-                                        "description": "LEA of school",
-                                        "type": "string"
-                                    },
-                                    "addr": {
-                                        "description": "Address of school",
-                                        "type": "string"
-                                    },
-                                    "email": {
-                                        "description": "School's email",
-                                        "type": "string"
-                                    },
-                                    "phone": {
-                                        "description": "School's phone number",
-                                        "type": "string"
-                                    },
-                                    "p_name": {
-                                        "description": "Proprietor's name",
-                                        "type": "string"
-                                    },
-                                    "p_email": {
-                                        "description": "Proprietor's email",
-                                        "type": "string"
-                                    },
-                                    "p_phone": {
-                                        "description": "Proprietor's phone number",
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Success"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/getMySchools/{dioceseId}": {
-            "get": {
-                "tags": [
-                    "Api"
-                ],
-                "summary": "Get Schools belonging to my diocese",
-                "description": "Use this endpoint to get schools belonging to a secretary's diocese",
-                "operationId": "ad31519c653ccdecb4812999b2b62352",
-                "parameters": [
-                    {
-                        "name": "dioceseId",
-                        "in": "path",
-                        "description": "Diocese ID",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "start",
-                        "in": "query",
-                        "description": "Start index for limiting the result. If not provided, will return first 20 records only",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "count",
-                        "in": "query",
-                        "description": "Number of records to retrieve",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
         "/api/getSchools": {
             "get": {
                 "tags": [
                     "Admin"
                 ],
-                "summary": "ADMIN: Get all Schools",
-                "description": "Use this endpoint to get all schools. Limit by `start` and `count`",
+                "summary": "ADMIN: Get schools",
+                "description": "Use this endpoint to get Schools.",
                 "operationId": "0ed9b606b2c0e41ab62afdd5acc7c4d8",
                 "parameters": [
                     {
                         "name": "start",
                         "in": "query",
-                        "description": "Start index for limiting the result. If not provided, will return first 20 records only",
+                        "description": "Index to start at",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1920,7 +1431,7 @@
                     {
                         "name": "count",
                         "in": "query",
-                        "description": "Number of records to retrieve",
+                        "description": "No of records to retrieve",
                         "required": false,
                         "schema": {
                             "type": "integer"

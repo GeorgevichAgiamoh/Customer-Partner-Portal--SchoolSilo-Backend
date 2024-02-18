@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('school_basic_data', function (Blueprint $table) {
             $table->string('user_id')->primary();
-            $table->string('sname');
+            $table->text('sname');
             $table->string('phn');
             $table->string('eml');
             $table->string('pcode');

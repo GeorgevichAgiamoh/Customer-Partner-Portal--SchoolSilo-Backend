@@ -19,8 +19,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'email',
-        'password1',
-        'password2',
+        'uid',
+        'password',
     ];
 
     /**
@@ -29,8 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $hidden = [
-        'password1',
-        'password2',
+        'password',
         'remember_token',
     ];
 
@@ -41,51 +40,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
-
-    /**
-     * Mutator for hashing the first password.
-     *
-     * @param string $value
-     * @return void
-     */
-    public function setPassword1Attribute($value)
-    {
-        $this->attributes['password1'] = bcrypt($value);
-    }
-
-    /**
-     * Mutator for hashing the second password.
-     *
-     * @param string $value
-     * @return void
-     */
-    public function setPassword2Attribute($value)
-    {
-        $this->attributes['password2'] = bcrypt($value);
-    }
-
-    /**
-     * Accessor for getting the first password.
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getPassword1Attribute($value)
-    {
-        return decrypt($value);
-    }
-
-    /**
-     * Accessor for getting the second password.
-     *
-     * @param string $value
-     * @return string
-     */
-    public function getPassword2Attribute($value)
-    {
-        return decrypt($value);
-    }
     
     public function getJWTIdentifier(){
         return $this->getKey();
