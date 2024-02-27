@@ -8,6 +8,6 @@ class files extends Model
 {
     protected $table = 'files'; 
     protected $fillable = [
-        'diocese_id','folder', 'file'
+        'user_id','folder', 'file'
     ];
 }

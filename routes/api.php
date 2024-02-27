@@ -26,9 +26,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('registerSchool', [ApiController::class,'registerSchool']);
 Route::post('registerPartner', [ApiController::class,'registerPartner']);
+Route::post('registerAdmin', [ApiController::class,'registerAdmin']);
 Route::post('schoolLogin', [ApiController::class,'schoolLogin']);
 Route::post('partnerLogin', [ApiController::class,'partnerLogin']);
-Route::post('adminlogin', [ApiController::class,'adminlogin']);
+Route::post('adminLogin', [ApiController::class,'adminLogin']);
 Route::post('setFirstAdminUserInfo', [ApiController::class,'setFirstAdminUserInfo']); // For first Admin (call on postman)
 Route::post('paystackConf', [ApiController::class,'paystackConf']);
 Route::post('sendPasswordResetEmail', [ApiController::class,'sendPasswordResetEmail']);
@@ -48,6 +49,8 @@ Route::group([
     Route::post('setPartnerGeneralInfo', [ApiController::class,'setPartnerGeneralInfo']);
     Route::post('setSchoolPropInfo', [ApiController::class,'setSchoolPropInfo']);
     Route::post('setPartnerFinancialInfo', [ApiController::class,'setPartnerFinancialInfo']);
+    Route::post('createMsgThread', [ApiController::class,'createMsgThread']);
+    Route::post('sendMsg', [ApiController::class,'sendMsg']);
 
     
     Route::get('getSchoolBasicInfo/{uid}', [ApiController::class, 'getSchoolBasicInfo']);
@@ -55,20 +58,38 @@ Route::group([
     Route::get('getSchoolGeneralInfo/{uid}', [ApiController::class, 'getSchoolGeneralInfo']);
     Route::get('getPartnerGeneralInfo/{uid}', [ApiController::class, 'getPartnerGeneralInfo']);
     Route::get('getSchoolPropInfo/{uid}', [ApiController::class, 'getSchoolPropInfo']);
+    Route::get('getPartnerHighlights/{uid}', [ApiController::class, 'getPartnerHighlights']);
     Route::get('getPartnerFinancialInfo/{uid}', [ApiController::class, 'getPartnerFinancialInfo']);
     Route::get('getPartnerComs/{uid}', [ApiController::class, 'getPartnerComs']);
     Route::get('getPartnerComsBySchool/{uid}/{sid}', [ApiController::class, 'getPartnerComsBySchool']);
     Route::get('getAnnouncements', [ApiController::class, 'getAnnouncements']);
     Route::get('getSchoolsByPartner/{uid}', [ApiController::class, 'getSchoolsByPartner']);
     Route::get('searchSchools', [ApiController::class, 'searchSchools']);
+    Route::get('searchPartners', [ApiController::class, 'searchPartners']);
+    Route::get('getMyMessages/{uid}', [ApiController::class, 'getMyMessages']);
+    Route::get('getMessageThread/{tid}', [ApiController::class, 'getMessageThread']);
+
+
+    Route::post('uploadFile', [ApiController::class,'uploadFile']);
 
     Route::get('fileExists/{folder}/{filename}', [ApiController::class, 'fileExists']);
     Route::get('getFiles/{uid}', [ApiController::class, 'getFiles']);
 
     //---- ADMIN ONLY
     Route::post('setAnnouncements', [ApiController::class,'setAnnouncements']);
+    Route::post('sendMail', [ApiController::class,'sendMail']);
+    Route::post('setSchoolsiloInfo', [ApiController::class,'setSchoolsiloInfo']);
+    Route::post('setAdmin', [ApiController::class,'setAdmin']);
 
-    Route::get('getSchools', [ApiController::class, 'getSchools']);
+    Route::get('getAdminHighlights', [ApiController::class, 'getAdminHighlights']);
+    Route::get('getAdmin/{uid}', [ApiController::class, 'getAdmin']);
+    Route::get('getSchoolsByV/{vid}', [ApiController::class, 'getSchoolsByV']);
+    Route::get('getPartnersByV/{vid}', [ApiController::class, 'getPartnersByV']);
+    Route::get('getVerificationStats', [ApiController::class, 'getVerificationStats']);
+    Route::get('getPaymentStats', [ApiController::class, 'getPaymentStats']);
+    Route::get('getSchoolsByPay/{pid}', [ApiController::class, 'getSchoolsByPay']);
+    Route::get('getSchoolsiloInfo/{uid}', [ApiController::class, 'getSchoolsiloInfo']);
+    
 
 
     //----
