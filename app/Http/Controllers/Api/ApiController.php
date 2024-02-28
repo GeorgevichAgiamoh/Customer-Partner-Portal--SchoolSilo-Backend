@@ -53,21 +53,11 @@ class ApiController extends Controller
      *     tags={"Unprotected"},
      *     summary="Create the admin, MUST CALL WITH ADMIN UID !!!",
      *     @OA\Response(response="200", description="SUccess"),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uid", type="string"),
-     *         )
-     *     ),
      * )
      */
     public function setFirstAdminUserInfo(Request $request){
-        $request->validate([
-            "uid"=>"required",
-        ]);
         admin_user::create([
-            "user_id"=> $request->uid,
+            "eml"=> "admin@schoolsilo.cloud",
             "lname"=> 'SCHOOLSILO',
             "oname"=> 'ADMIN USER',
             "role"=> '0',
@@ -420,7 +410,7 @@ class ApiController extends Controller
         $uid = $request->email.'a';
         $usr = User::where("uid", $uid)->first();
         if($usr){
-            $apld = admin_user::where("user_id","=", $usr->id)->first();
+            $apld = admin_user::where("eml","=", $request->email)->first();
             if($apld){
                 $customClaims = [
                     'role'=>$apld->role,
@@ -777,7 +767,7 @@ class ApiController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="user_id", type="string"),
-     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="eml", type="string", format="email"),
      *             @OA\Property(property="sname", type="string"),
      *             @OA\Property(property="phn", type="string"),
      *             @OA\Property(property="pcode", type="string"),
@@ -794,7 +784,7 @@ class ApiController extends Controller
             "user_id"=>"required",
             "sname"=> "required",
             "phn"=> "required",
-            "email"=> "required",
+            "eml"=> "required",
             "pcode"=> "required",
             "verif"=> "required",
             "pay"=> "required",
@@ -805,7 +795,7 @@ class ApiController extends Controller
                 "sname"=> $request->sname,
                 "phn"=> $request->phn,
                 "pcode"=> $request->pcode,
-                "eml"=> $request->email,
+                "eml"=> $request->eml,
                 "verif"=> $request->verif,
                 "pay"=> $request->pay,
             ]);
@@ -862,7 +852,7 @@ class ApiController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="user_id", type="string"),
-     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="eml", type="string", format="email"),
      *             @OA\Property(property="fname", type="string"),
      *             @OA\Property(property="mname", type="string"),
      *             @OA\Property(property="lname", type="string"),
@@ -881,7 +871,7 @@ class ApiController extends Controller
             "mname"=> "required",
             "lname"=> "required",
             "phn"=> "required",
-            "email"=> "required",
+            "eml"=> "required",
             "verif"=> "required",
         ]);
         $dbd = partner_basic_data::where("user_id", $request->user_id)->first();
@@ -892,7 +882,7 @@ class ApiController extends Controller
                 "lname"=> $request->lname,
                 "mname"=> $request->mname,
                 "phn"=> $request->phn,
-                "eml"=> $request->email,
+                "eml"=> $request->eml,
                 "verif"=> $request->verif,
             ]);
             return response()->json([
@@ -1586,6 +1576,78 @@ class ApiController extends Controller
     }
 
 
+    /**
+     * @OA\Get(
+     *     path="/api/searchMsgThread",
+     *     tags={"Api"},
+     *     summary="Full text search on subjects",
+     *     description=" Use this endpoint for Full text search on message subjects",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         required=true,
+     *         description="Search term",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     * )
+     */
+    public function searchMsgThread(){
+        $search = null;
+        if(request()->has('search')) {
+            $search = request()->input('search');
+        }
+        if($search) {
+            $pld = msgthread::whereRaw("MATCH(subject) AGAINST(? IN BOOLEAN MODE)", [$search])
+            ->orderByRaw("MATCH(subject) AGAINST(? IN BOOLEAN MODE) DESC", [$search])
+            ->take(2)
+            ->get();
+            return response()->json([
+                "status"=> true,
+                "message"=> "Success",
+                "pld"=> $pld
+            ]); 
+        }
+        return response()->json([
+            "status"=> false,
+            "message"=> "The Search param is required"
+        ]);
+    }
+    
+
+
+     /**
+     * @OA\Get(
+     *     path="/api/getMyMessagesStat/{uid}",
+     *     tags={"Api"},
+     *     summary="Get Message Count by UID",
+     *     description="Use this endpoint to get messages count for this `uid`",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(
+     *         name="uid",
+     *         in="path",
+     *         required=true,
+     *         description="User ID",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
+     *     @OA\Response(response="401", description="Unauthorized"),
+     * )
+     */
+    public function getMyMessagesStat($uid){
+        $totalMessages = msgthread::where('from_uid', $uid)->orWhere('to_uid', $uid)->count();
+        return response()->json([
+            "status"=> true,
+            "message"=> "Success",
+            "pld"=> [
+                "totalMessages"=>$totalMessages,
+            ],
+        ]);
+    }
+
+
      /**
      * @OA\Get(
      *     path="/api/getMyMessages/{uid}",
@@ -1695,6 +1757,9 @@ class ApiController extends Controller
      *             @OA\Property(property="from_uid", type="string", description="User ID of the person sending"),
      *             @OA\Property(property="to", type="string", description="Name of the person receiving"),
      *             @OA\Property(property="to_uid", type="string", description="User ID of the person receiving"),
+     *             @OA\Property(property="subject", type="string", description="Message Subject"),
+     *             @OA\Property(property="from_mail", type="string", description=",,"),
+     *             @OA\Property(property="to_mail", type="string", description=",,"),
      *             @OA\Property(property="last_msg", type="string", description="Last Message (First in this case) - Shown in preview"),
      *         )
      *     ),
@@ -1709,6 +1774,9 @@ class ApiController extends Controller
             "to"=> "required",
             "to_uid"=> "required",
             "last_msg"=> "required",
+            "subject"=>"required",
+            "from_mail"=>"required",
+            "to_mail"=>"required"
         ]);
         $mt = msgthread::create([
             "from"=> $request->from,
@@ -1716,13 +1784,14 @@ class ApiController extends Controller
             "to"=> $request->to,
             "to_uid"=> $request->to_uid,
             "last_msg"=> $request->last_msg,
+            "subject"=> $request->subject,
+            "from_mail"=> $request->from_mail,
+            "to_mail"=> $request->to_mail,
         ]);
         return response()->json([
             "status"=> true,
             "message"=> "Success",
-            "pld"=>[
-                'id'=>strval($mt->id)
-            ]
+            "pld"=>$mt
         ]);
     }
 
@@ -1737,11 +1806,11 @@ class ApiController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="subject", type="string", description="Subject of the announcement"),
      *             @OA\Property(property="body", type="string", description="Message content"),
      *             @OA\Property(property="who", type="string", description="User ID of the person sending"),
      *             @OA\Property(property="tid", type="string", description="Thread ID of the message"),
      *             @OA\Property(property="mail", type="string", description="If not empty, user will be mailed"),
+     *             @OA\Property(property="art", type="string", description="Document ID"),
      *         )
      *     ),
      *     @OA\Response(response="200", description="Success"),
@@ -1750,19 +1819,22 @@ class ApiController extends Controller
      */
     public function sendMsg(Request $request){
         $request->validate([
-            "subject"=>"required",
             "body"=> "required",
             "who"=> "required",
             "tid"=> "required",
             "mail"=> "required",
+            "art"=> "required",
         ]);
         $trd = msgthread::where('id',intval($request->tid))->first();
         if($trd){
-            msg::create([
+            $ms=msg::create([
                 "tid"=> $request->tid,
-                "subject"=> $request->subject,
                 "body"=> $request->body,
                 "who"=> $request->who,
+                "art"=> $request->art,
+            ]);
+            $trd->update([
+                "last_msg"=>$request->body,
             ]);
             if($request->mail!=''){
                 $isPerson1 = $request->who == $trd->from_uid;
@@ -1777,21 +1849,23 @@ class ApiController extends Controller
                 }
                 $data = [
                     'name' => $from.' -> '.$to,
-                    'subject' => $request->subject,
+                    'subject' => $trd->subject,
                     'body' => $request->body,
-                    'link'=>'https://portal.schoolsilo.cloud'
+                    'link'=>$request->art!='_'?'https://api.schoolsilo.cloud/getFile/msg/'.$request->art:'https://portal.schoolsilo.cloud'
                 ];
             
                 Mail::to($request->mail)->send(new SSSMails($data));
                 return response()->json([
                     "status"=> true,
-                    "message"=> "Success (User was also mailed"
+                    "message"=> "Success (User was also mailed)",
+                    "pld"=>$ms
                 ]);
             }
             // Respond
             return response()->json([
                 "status"=> true,
-                "message"=> "Success"
+                "message"=> "Success",
+                "pld"=>$ms
             ]);
         }
         return response()->json([
@@ -1809,36 +1883,84 @@ class ApiController extends Controller
 
      /**
      * @OA\Get(
-     *     path="/api/getAdmin/{uid}",
+     *     path="/api/getAdmin",
      *     tags={"Api"},
-     *     summary="Get Messages by thread id",
+     *     summary="Get an admin",
      *     description="Use this endpoint to get an admin info",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(
-     *         name="uid",
-     *         in="path",
+     *         name="eml",
+     *         in="query",
      *         required=true,
-     *         description="User ID",
+     *         description="Email",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
      *     @OA\Response(response="401", description="Unauthorized"),
      * )
      */
-    public function getAdmin($uid){
-        $pld = admin_user::where('user_id', $uid)->first();
+    public function getAdmin(){
+        if(request()->has('eml')) {
+            $pld = admin_user::where('eml', request()->input('eml'))->first();
+            return response()->json([
+                "status"=> true,
+                "message"=> "Success",
+                "pld"=> $pld,
+            ]);
+        }
         return response()->json([
-            "status"=> true,
-            "message"=> "Success",
-            "pld"=> $pld,
+            "status"=> false,
+            "message"=> "Please provide Email (eml field)",
         ]);
+    }
+
+    //GET
+    public function removeAdmin(){
+        if ($this->hasRole('0')) {
+            if(request()->has('eml')) {
+                $dels = admin_user::where('eml', request()->input('eml'))->delete();
+                if($dels>0){
+                    return response()->json([
+                        "status"=> true,
+                        "message"=> "Success",
+                    ]);  
+                }
+                return response()->json([
+                    "status"=> false,
+                    "message"=> "Nothing to delete"
+                ]);   
+            }
+            return response()->json([
+                "status"=> false,
+                "message"=> "Please provide Email (eml field)",
+            ]);
+        }
+        return response()->json([
+            "status"=> false,
+            "message"=> "Access denied"
+        ],401);
+    }
+
+    //GET
+    public function getAdmins(){
+        if ($this->hasRole('0')) {
+            $pld = admin_user::all();
+            return response()->json([
+                "status"=> true,
+                "message"=> "Success",
+                "pld"=> $pld
+            ]);   
+        }
+        return response()->json([
+            "status"=> false,
+            "message"=> "Access denied"
+        ],401);
     }
 
     //POST
     public function setAdmin(Request $request){
         if ($this->hasRole('0')) {
             $request->validate([
-                "user_id"=>"required",
                 "lname"=>"required",
                 "oname"=> "required",
                 "eml"=> "required",
@@ -1851,11 +1973,10 @@ class ApiController extends Controller
                 "pm2"=>"required",
             ]);
             admin_user::updateOrCreate(
-                ["user_id"=> $request->user_id,],
+                ["eml"=> $request->eml,],
                 [
                 "lname"=> $request->lname,
                 "oname"=> $request->oname,
-                "eml"=> $request->eml,
                 "role"=> $request->role,
                 "pd1"=> $request->pd1,
                 "pd2"=> $request->pd2,

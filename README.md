@@ -39,4 +39,4 @@ Please find API docs @ [here](https://api.schoolsilo.cloud/api/documentation).
 
 Change admin user model
 Change school basic info model
-Swagger for - setAdmin, info
+Swagger for - setAdmin, info, getAdmins

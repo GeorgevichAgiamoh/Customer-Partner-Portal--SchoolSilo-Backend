@@ -8,6 +8,6 @@ class msg extends Model
 {
     protected $table = 'msg'; 
     protected $fillable = [
-        'tid','subject','body', 'who'
+        'tid','body', 'who', 'art'
     ];
 }

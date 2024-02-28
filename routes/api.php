@@ -49,8 +49,6 @@ Route::group([
     Route::post('setPartnerGeneralInfo', [ApiController::class,'setPartnerGeneralInfo']);
     Route::post('setSchoolPropInfo', [ApiController::class,'setSchoolPropInfo']);
     Route::post('setPartnerFinancialInfo', [ApiController::class,'setPartnerFinancialInfo']);
-    Route::post('createMsgThread', [ApiController::class,'createMsgThread']);
-    Route::post('sendMsg', [ApiController::class,'sendMsg']);
 
     
     Route::get('getSchoolBasicInfo/{uid}', [ApiController::class, 'getSchoolBasicInfo']);
@@ -66,8 +64,6 @@ Route::group([
     Route::get('getSchoolsByPartner/{uid}', [ApiController::class, 'getSchoolsByPartner']);
     Route::get('searchSchools', [ApiController::class, 'searchSchools']);
     Route::get('searchPartners', [ApiController::class, 'searchPartners']);
-    Route::get('getMyMessages/{uid}', [ApiController::class, 'getMyMessages']);
-    Route::get('getMessageThread/{tid}', [ApiController::class, 'getMessageThread']);
 
 
     Route::post('uploadFile', [ApiController::class,'uploadFile']);
@@ -82,13 +78,27 @@ Route::group([
     Route::post('setAdmin', [ApiController::class,'setAdmin']);
 
     Route::get('getAdminHighlights', [ApiController::class, 'getAdminHighlights']);
-    Route::get('getAdmin/{uid}', [ApiController::class, 'getAdmin']);
+    Route::get('getAdmin', [ApiController::class, 'getAdmin']);
     Route::get('getSchoolsByV/{vid}', [ApiController::class, 'getSchoolsByV']);
     Route::get('getPartnersByV/{vid}', [ApiController::class, 'getPartnersByV']);
     Route::get('getVerificationStats', [ApiController::class, 'getVerificationStats']);
     Route::get('getPaymentStats', [ApiController::class, 'getPaymentStats']);
     Route::get('getSchoolsByPay/{pid}', [ApiController::class, 'getSchoolsByPay']);
     Route::get('getSchoolsiloInfo/{uid}', [ApiController::class, 'getSchoolsiloInfo']);
+    Route::get('getAdmins', [ApiController::class, 'getAdmins']);
+    Route::get('removeAdmin', [ApiController::class, 'removeAdmin']);
+
+    //--MESSAGES
+    Route::post('createMsgThread', [ApiController::class,'createMsgThread']);
+    Route::post('sendMsg', [ApiController::class,'sendMsg']);
+
+    Route::get('getMyMessages/{uid}', [ApiController::class, 'getMyMessages']);
+    Route::get('getMessageThread/{tid}', [ApiController::class, 'getMessageThread']);
+    Route::get('getMyMessagesStat/{tid}', [ApiController::class, 'getMyMessagesStat']);
+    Route::get('searchMsgThread', [ApiController::class, 'searchMsgThread']);
+
+
+
     
 
 

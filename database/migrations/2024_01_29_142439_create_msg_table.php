@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('msg', function (Blueprint $table) {
             $table->id();
-            $table->string('subject');
             $table->text('body');
             $table->string('who');
             $table->string('tid');
+            $table->string('art');
             $table->timestamps();
 
              // For queries based on tid
