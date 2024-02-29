@@ -1023,7 +1023,7 @@ class ApiController extends Controller
      *             @OA\Property(property="sex", type="string", description="Gender"),
      *             @OA\Property(property="phn", type="string", description="Phone"),
      *             @OA\Property(property="addr", type="string", description="Address"),
-     *             @OA\Property(property="email", type="string", description="Email", format="email"),
+     *             @OA\Property(property="eml", type="string", description="Email", format="email"),
      *         )
      *     ),
      *     @OA\Response(response="200", description="success"),
@@ -1039,7 +1039,7 @@ class ApiController extends Controller
             "sex"=> "required",
             "phn"=> "required",
             "addr"=> "required",
-            "email"=> "required|email",
+            "eml"=> "required|email",
         ]);
         school_prop_data::updateOrCreate(
             ["user_id"=> $request->user_id,],
@@ -1050,7 +1050,7 @@ class ApiController extends Controller
             "sex"=> $request->sex,
             "phn"=> $request->phn,
             "addr"=> $request->addr,
-            "eml"=> $request->email,
+            "eml"=> $request->eml,
         ]);
         // Respond
         return response()->json([
