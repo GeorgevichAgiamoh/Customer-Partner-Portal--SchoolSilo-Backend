@@ -1958,7 +1958,7 @@ class ApiController extends Controller
     }
 
     //POST
-    public function setAdmin(Request $request){
+    public function setAdmin(Request $request){ //TODO create admin
         if ($this->hasRole('0')) {
             $request->validate([
                 "lname"=>"required",
@@ -1972,6 +1972,15 @@ class ApiController extends Controller
                 "pm1"=> "required",
                 "pm2"=>"required",
             ]);
+            $uid = $request->eml.'a';
+            $usr = User::where("uid", $uid)->first();
+            if(!$usr){
+                $usr = User::create([
+                    "email"=> $request->eml,
+                    "uid"=> $uid,
+                    "password"=> bcrypt('123456'),
+                ]);
+            }
             admin_user::updateOrCreate(
                 ["eml"=> $request->eml,],
                 [
