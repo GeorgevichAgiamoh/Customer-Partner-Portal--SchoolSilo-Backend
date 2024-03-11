@@ -74,63 +74,6 @@ class ApiController extends Controller
         ]);
     }
 
-    
-    /**
-     * @OA\Post(
-     *     path="/api/registerAdmin",
-     *     tags={"Unprotected"},
-     *     summary="Register an admin",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="email", type="string", format="email"),
-     *             @OA\Property(property="password", type="string"),
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Login Successfully"),
-     * )
-     */
-    public function registerAdmin(Request $request){
-        //Data validation
-        $request->validate([
-            "email"=>"required|email",
-            "password"=> "required",
-        ]);
-        $uid = $request->email.'a';
-        $usr = User::where("uid", $uid)->first();
-        if(!$usr){
-            $usr = User::create([
-                "email"=> $request->email,
-                "uid"=> $uid,
-                "password"=> bcrypt($request->password),
-            ]);
-            $token = JWTAuth::attempt([
-                "email"=> $request->email,
-                "password"=> $request->password,
-            ]);
-            if(!empty($token)){
-                return response()->json([
-                    "status"=> true,
-                    "message"=> "User created successfully: ".strval($usr->id),
-                    "token"=> $token,
-                    "pld"=>$usr
-                ]);
-            }
-            // Respond
-            return response()->json([
-                "status"=> true,
-                "message"=> "User created successfully",
-                "pld"=>$usr
-            ]);
-        }
-        return response()->json([
-            "status"=> false,
-            "message"=> "Account already exists",
-        ]);
-    }
-
-
 
     /**
      * @OA\Post(
@@ -235,7 +178,6 @@ class ApiController extends Controller
             "password"=> "required",
             "fname"=> "required",
             "lname"=> "required",
-            "mname"=> "required",
             "phn"=> "required",
             "verif"=> "required",
         ]);
@@ -251,7 +193,7 @@ class ApiController extends Controller
                 "user_id"=> strval($usr->id),
                 "fname"=> $request->fname,
                 "lname"=> $request->lname,
-                "mname"=> $request->mname,
+                "mname"=> $request->mname ?? '',
                 "phn"=> $request->phn,
                 "eml"=> $request->email,
                 "verif"=> $request->verif,
@@ -543,6 +485,15 @@ class ApiController extends Controller
                     ]);
                     if($payinfo[1]=='0'){
                         school_basic_data::where("user_id", $payinfo[3])->update(['pay' => '1']);
+                        $sch = school_basic_data::where("user_id", $payinfo[3])->first();
+                        $data = [
+                            'name' => $sch->sname,
+                            'subject' => 'Payment Received',
+                            'body' => 'Thank you, we have received your registration fee payment for SCHOOLSILO. Please login and complete your profile. Your portal will be ready in 72 hours.',
+                            'link'=>'https://portal.schoolsilo.cloud/schoolLogin'
+                        ];
+                    
+                        Mail::to($sch->eml)->send(new SSSMails($data));
                     }
                     /*
                     $upl = [
@@ -868,7 +819,6 @@ class ApiController extends Controller
         $request->validate([
             "user_id"=>"required",
             "fname"=> "required",
-            "mname"=> "required",
             "lname"=> "required",
             "phn"=> "required",
             "eml"=> "required",
@@ -880,7 +830,7 @@ class ApiController extends Controller
                 "user_id"=> $request->user_id,
                 "fname"=> $request->fname,
                 "lname"=> $request->lname,
-                "mname"=> $request->mname,
+                "mname"=> $request->mname ?? '',
                 "phn"=> $request->phn,
                 "eml"=> $request->eml,
                 "verif"=> $request->verif,
@@ -1034,7 +984,6 @@ class ApiController extends Controller
         $request->validate([
             "user_id"=>"required",
             "fname"=> "required",
-            "mname"=> "required",
             "lname"=> "required",
             "sex"=> "required",
             "phn"=> "required",
@@ -1045,7 +994,7 @@ class ApiController extends Controller
             ["user_id"=> $request->user_id,],
             [
             "fname"=> $request->fname,
-            "mname"=> $request->mname,
+            "mname"=> $request->mname ?? '',
             "lname"=> $request->lname,
             "sex"=> $request->sex,
             "phn"=> $request->phn,

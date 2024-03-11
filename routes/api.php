@@ -26,7 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('registerSchool', [ApiController::class,'registerSchool']);
 Route::post('registerPartner', [ApiController::class,'registerPartner']);
-Route::post('registerAdmin', [ApiController::class,'registerAdmin']);
 Route::post('schoolLogin', [ApiController::class,'schoolLogin']);
 Route::post('partnerLogin', [ApiController::class,'partnerLogin']);
 Route::post('adminLogin', [ApiController::class,'adminLogin']);
